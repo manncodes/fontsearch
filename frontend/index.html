@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,28 +11,93 @@
         body {
             font-family: 'Inter', sans-serif;
         }
+
         .search-result {
-            transition: transform 0.2s;
+            transition: all 0.3s ease;
         }
+
         .search-result:hover {
             transform: translateY(-2px);
         }
+
         .font-preview img {
             background: #fff;
             width: 100%;
             object-fit: contain;
         }
+
         .metadata-section:empty {
             display: none;
         }
+
         .badge-container:empty {
             display: none;
         }
-        .badge-container:empty + h4 {
+
+        .badge-container:empty+h4 {
             display: none;
+        }
+
+        .description-text {
+            overflow: hidden;
+            position: relative;
+        }
+
+        .description-text.collapsed {
+            max-height: 4.5rem;
+            /* Approx. 3 lines */
+        }
+
+        .read-more {
+            color: #2563eb;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .read-more:hover {
+            text-decoration: underline;
+        }
+
+        /* Add after the existing styles in the <style> section */
+        .grid-container {
+            transition: all 0.3s ease;
+        }
+
+        .card-expanded {
+            transform: scale(1.02);
+            z-index: 10;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+        }
+
+        .card-content {
+            transition: max-height 0.3s ease-in-out;
+        }
+
+        .view-toggle-button {
+            padding: 0.5rem;
+            border-radius: 0.375rem;
+            transition: background-color 0.2s;
+        }
+
+        .view-toggle-button:hover {
+            background-color: rgb(243 244 246);
+        }
+
+        .view-toggle-button.active {
+            background-color: rgb(229 231 235);
+        }
+
+        .keyboard-shortcut {
+            font-size: 0.75rem;
+            color: rgb(107 114 128);
+            padding: 0.125rem 0.375rem;
+            background-color: rgb(243 244 246);
+            border-radius: 0.25rem;
+            margin: 0 0.25rem;
         }
     </style>
 </head>
+
 <body class="min-h-screen bg-gray-50">
     <!-- Search Header -->
     <div class="max-w-6xl mx-auto p-8">
@@ -40,24 +106,67 @@
             <p class="text-gray-600 mb-6">
                 Search through our collection of fonts using natural language
             </p>
-            
+
             <div class="flex gap-2 max-w-2xl mx-auto">
-                <input
-                    type="text"
-                    id="searchInput"
+                <input type="text" id="searchInput"
                     placeholder="Try 'playful handwritten font' or 'professional serif'..."
-                    class="flex-1 px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                >
-                <button
-                    id="searchButton"
-                    class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 flex items-center gap-2"
-                >
+                    class="flex-1 px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+                <button id="searchButton"
+                    class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 flex items-center gap-2">
                     <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                     </svg>
                     Search
                 </button>
             </div>
+            <!-- Add after the search input div -->
+            <div class="text-center mt-2 text-sm text-gray-500">
+                Press <span class="keyboard-shortcut">Ctrl/⌘ + K</span> to search •
+                <span class="keyboard-shortcut">Ctrl/⌘ + /</span> to toggle view
+            </div>
+        </div>
+
+        <!-- Card Size Selector -->
+        <div class="mb-6 flex justify-end">
+            <select id="cardSize"
+                class="px-3 py-1 rounded-lg border border-gray-300 bg-white focus:outline-none focus:ring-2">
+                <option value="compact">Compact</option>
+                <option value="normal" selected>Normal</option>
+                <option value="large">Large</option>
+            </select>
+        </div>
+
+        <!-- Add after the card size selector -->
+        <div class="mb-6 flex justify-between items-center">
+            <div class="flex items-center gap-2">
+                <button class="view-toggle-button active" data-view="grid" title="Grid view">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="3" width="7" height="7"></rect>
+                        <rect x="14" y="3" width="7" height="7"></rect>
+                        <rect x="14" y="14" width="7" height="7"></rect>
+                        <rect x="3" y="14" width="7" height="7"></rect>
+                    </svg>
+                </button>
+                <button class="view-toggle-button" data-view="list" title="List view">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="8" y1="6" x2="21" y2="6"></line>
+                        <line x1="8" y1="12" x2="21" y2="12"></line>
+                        <line x1="8" y1="18" x2="21" y2="18"></line>
+                        <line x1="3" y1="6" x2="3.01" y2="6"></line>
+                        <line x1="3" y1="12" x2="3.01" y2="12"></line>
+                        <line x1="3" y1="18" x2="3.01" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+
+            <button id="sortButton"
+                class="flex items-center gap-1 px-3 py-1 text-sm text-gray-600 hover:bg-gray-100 rounded">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M7 20V4m0 16l3-3m-3 3l-3-3m13-3V4m0 10l3-3m-3 3l-3-3" />
+                </svg>
+                Sort by score
+            </button>
         </div>
 
         <!-- States -->
@@ -84,18 +193,29 @@
             <div class="p-6">
                 <!-- Title -->
                 <h3 class="text-lg font-semibold text-gray-900 mb-2 truncate font-title"></h3>
-                
+                <!-- Add this right after the title in the font card template -->
+                <button
+                    class="expand-collapse-btn p-1 text-gray-400 hover:text-gray-600 rounded-full hover:bg-gray-100">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" />
+                    </svg>
+                </button>
                 <!-- Preview -->
-                <div class="font-preview bg-gray-50 -mx-6 px-6 py-4 border-y border-gray-100 mb-4">
-                    <img class="w-full max-h-20 object-contain" src="" alt=""
-                         onerror="this.parentElement.innerHTML='<div class=\'h-20 flex items-center justify-center text-gray-400\'>Preview not available</div>'">
+                <div class="font-preview bg-gray-50 -mx-6 px-6 py-4 border-y border-gray-100">
+                    <img class="w-full object-contain" src="" alt=""
+                        onerror="this.parentElement.innerHTML='<div class=\'h-20 flex items-center justify-center text-gray-400\'>Preview not available</div>'">
                 </div>
 
-                <!-- Description (only shown if exists) -->
-                <div class="description-container"></div>
+                <!-- Description -->
+                <div class="description-container mt-4">
+                    <div class="description-text text-sm text-gray-600 collapsed">
+                        <p class="description-content"></p>
+                    </div>
+                    <button class="read-more text-sm mt-1 hidden">...more</button>
+                </div>
 
                 <!-- Metadata Sections -->
-                <div class="metadata-section space-y-4">
+                <div class="metadata-section space-y-4 mt-4">
                     <!-- Technical Characteristics -->
                     <div class="tech-section">
                         <h4 class="text-xs font-semibold text-gray-500 mb-1">Technical Characteristics</h4>
@@ -126,7 +246,7 @@
     <script>
         const API_BASE_URL = 'http://localhost:5000';
 
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             const searchInput = document.getElementById('searchInput');
             const searchButton = document.getElementById('searchButton');
             const loadingIndicator = document.getElementById('loadingIndicator');
@@ -134,14 +254,65 @@
             const resultsGrid = document.getElementById('resultsGrid');
             const noResults = document.getElementById('noResults');
             const template = document.getElementById('fontCardTemplate');
+            const cardSizeSelect = document.getElementById('cardSize');
+
+            function setupDescriptionToggle(container) {
+                const descText = container.querySelector('.description-text');
+                const content = container.querySelector('.description-content');
+                const readMoreBtn = container.querySelector('.read-more');
+
+                if (!content.textContent.trim()) {
+                    container.remove();
+                    return;
+                }
+
+                // Check if content needs truncation
+                const isOverflowing = content.scrollHeight > 72; // Approximate height of 3 lines
+                if (isOverflowing) {
+                    readMoreBtn.classList.remove('hidden');
+                    readMoreBtn.addEventListener('click', () => {
+                        descText.classList.toggle('collapsed');
+                        readMoreBtn.textContent = descText.classList.contains('collapsed') ? '...more' : 'less';
+                    });
+                }
+            }
+
+            // Card size handling
+            const updateGridLayout = () => {
+                const size = cardSizeSelect.value;
+                resultsGrid.className = 'grid gap-6 ';
+
+                switch (size) {
+                    case 'compact':
+                        resultsGrid.classList.add('grid-cols-1', 'md:grid-cols-3', 'lg:grid-cols-4');
+                        document.querySelectorAll('.font-preview').forEach(preview => {
+                            preview.style.height = '100px';
+                        });
+                        break;
+                    case 'normal':
+                        resultsGrid.classList.add('grid-cols-1', 'md:grid-cols-2', 'lg:grid-cols-3');
+                        document.querySelectorAll('.font-preview').forEach(preview => {
+                            preview.style.height = '150px';
+                        });
+                        break;
+                    case 'large':
+                        resultsGrid.classList.add('grid-cols-1', 'md:grid-cols-2');
+                        document.querySelectorAll('.font-preview').forEach(preview => {
+                            preview.style.height = '200px';
+                        });
+                        break;
+                }
+            };
+
+            cardSizeSelect.addEventListener('change', updateGridLayout);
 
             function createBadge(text, variant) {
                 if (!text) return null;
-                
+
                 const badge = document.createElement('span');
                 let classes = 'inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ';
-                
-                switch(variant) {
+
+                switch (variant) {
                     case 'technical':
                         classes += 'bg-gray-100 text-gray-800';
                         break;
@@ -154,7 +325,7 @@
                     default:
                         classes += 'bg-gray-100 text-gray-800';
                 }
-                
+
                 badge.className = classes;
                 badge.textContent = text;
                 return badge;
@@ -171,22 +342,17 @@
 
                 results.forEach(font => {
                     const card = template.content.cloneNode(true);
-                    
+
                     // Set title
                     const title = font.filename.replace(/\.[^/.]+$/, '').replace(/_/g, ' ');
                     card.querySelector('.font-title').textContent = title;
-                    
+
                     // Set description if exists
-                    const descContainer = card.querySelector('.description-container');
+                    const descContent = card.querySelector('.description-content');
                     if (font.description) {
-                        const desc = document.createElement('p');
-                        desc.className = 'text-sm text-gray-600 mb-4 line-clamp-3';
-                        desc.textContent = font.description;
-                        descContainer.appendChild(desc);
-                    } else {
-                        descContainer.remove();
+                        descContent.textContent = font.description;
                     }
-                    
+
                     // Set image
                     const img = card.querySelector('img');
                     if (font.image) {
@@ -194,7 +360,7 @@
                         img.alt = title;
                     }
 
-                    // Add metadata with checks
+                    // Add metadata
                     const metadataSection = card.querySelector('.metadata-section');
                     let hasMetadata = false;
 
@@ -224,7 +390,7 @@
                         personalitySection.remove();
                     }
 
-                    // Practical Contexts
+                    // Use Cases
                     const contextSection = card.querySelector('.context-section');
                     if (font.practical_contexts?.length) {
                         const container = contextSection.querySelector('.contexts-container');
@@ -237,17 +403,24 @@
                         contextSection.remove();
                     }
 
-                    // Remove metadata section if empty
                     if (!hasMetadata) {
                         metadataSection.remove();
                     }
 
                     // Set score
-                    card.querySelector('.font-score').textContent = 
+                    card.querySelector('.font-score').textContent =
                         `Score: ${(font.score * 100).toFixed(1)}%`;
 
-                    resultsGrid.appendChild(card);
+                    // Add card to grid
+                    const cardElement = document.createElement('div');
+                    cardElement.appendChild(card);
+                    resultsGrid.appendChild(cardElement);
+
+                    // Setup description toggle after card is added to DOM
+                    setupDescriptionToggle(cardElement.querySelector('.description-container'));
                 });
+
+                updateGridLayout();
             }
 
             async function performSearch() {
@@ -290,7 +463,11 @@
                     performSearch();
                 }
             });
+
+            // Initialize grid layout
+            updateGridLayout();
         });
     </script>
 </body>
+
 </html>

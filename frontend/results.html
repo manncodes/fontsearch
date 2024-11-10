@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Media Gallery</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #f0f0f0;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .media-item {
+            margin-bottom: 30px;
+            background: white;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .media-title {
+            margin-bottom: 10px;
+            color: #333;
+            font-size: 1.2em;
+        }
+
+        img {
+            width: 100%;
+            height: auto;
+            cursor: zoom-in;
+            transition: transform 0.3s ease;
+        }
+
+        video {
+            width: 100%;
+            height: auto;
+            margin-bottom: 20px;
+        }
+
+        /* Zoom Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            z-index: 1000;
+            overflow: auto;
+        }
+
+        .modal-content {
+            margin: auto;
+            display: block;
+            max-width: 90%;
+            max-height: 90vh;
+            margin-top: 20px;
+        }
+
+        .close {
+            position: fixed;
+            top: 15px;
+            right: 35px;
+            color: #f1f1f1;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .zoomable {
+            transition: transform 0.3s;
+        }
+
+        .zoomable:hover {
+            transform: scale(1.02);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Video -->
+        <div class="media-item">
+            <h2 class="media-title">Project Video (all3.mp4)</h2>
+            <video controls>
+                <source src="../assets/all3.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+        </div>
+
+        <!-- SVG Files -->
+        <div class="media-item">
+            <h2 class="media-title">china.svg</h2>
+            <img src="../assets/china.svg" alt="China SVG" class="zoomable">
+        </div>
+
+        <div class="media-item">
+            <h2 class="media-title">FROG.svg</h2>
+            <img src="../assets/FROG.svg" alt="FROG SVG" class="zoomable">
+        </div>
+
+        <!-- PNG Images -->
+        <div class="media-item">
+            <h2 class="media-title">img1.png</h2>
+            <img src="../assets/img1.png" alt="Image 1" class="zoomable">
+        </div>
+
+        <div class="media-item">
+            <h2 class="media-title">img2.png</h2>
+            <img src="../assets/img2.png" alt="Image 2" class="zoomable">
+        </div>
+
+        <div class="media-item">
+            <h2 class="media-title">many_results3.svg</h2>
+            <img src="../assets/many_results3.svg" alt="Many Results" class="zoomable">
+        </div>
+
+        <div class="media-item">
+            <h2 class="media-title">pipeline_fonts2.png</h2>
+            <img src="../assets/pipeline_fonts2.png" alt="Pipeline Fonts" class="zoomable">
+        </div>
+
+        <div class="media-item">
+            <h2 class="media-title">SWAN.svg</h2>
+            <img src="../assets/SWAN.svg" alt="SWAN SVG" class="zoomable">
+        </div>
+    </div>
+
+    <!-- Modal for zoomed images -->
+    <div id="imageModal" class="modal">
+        <span class="close">&times;</span>
+        <img class="modal-content" id="modalImage">
+    </div>
+
+    <script>
+        // Get the modal
+        const modal = document.getElementById('imageModal');
+        const modalImg = document.getElementById('modalImage');
+        const closeBtn = document.getElementsByClassName('close')[0];
+
+        // Get all zoomable images
+        const images = document.getElementsByClassName('zoomable');
+
+        // Add click event to all images
+        Array.from(images).forEach(img => {
+            img.onclick = function() {
+                modal.style.display = 'block';
+                modalImg.src = this.src;
+            }
+        });
+
+        // Close modal when clicking X
+        closeBtn.onclick = function() {
+            modal.style.display = 'none';
+        }
+
+        // Close modal when clicking outside the image
+        modal.onclick = function(event) {
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        }
+
+        // Close modal with Escape key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                modal.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
