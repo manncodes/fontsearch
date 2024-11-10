@@ -1,0 +1,11 @@
+# pycache
+__pycache__
+
+# previous serving indexes for fontsearch
+prev_index/
+
+# dont push the assests folder to github
+rendered_fonts/**
+
+# also the fetched fonts descriptions
+font_descriptions/**
