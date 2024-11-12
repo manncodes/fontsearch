@@ -1,154 +1,47 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Font Search</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-        }
-
-        .search-result {
-            transition: all 0.3s ease;
-        }
-
-        .search-result:hover {
-            transform: translateY(-2px);
-        }
-
-        .font-preview img {
-            background: #fff;
-            width: 100%;
-            object-fit: contain;
-        }
-
-        .metadata-section:empty {
-            display: none;
-        }
-
-        .badge-container:empty {
-            display: none;
-        }
-
-        .badge-container:empty+h4 {
-            display: none;
-        }
-
-        .description-text {
-            overflow: hidden;
-            position: relative;
-        }
-
-        .description-text.collapsed {
-            max-height: 4.5rem;
-            /* Approx. 3 lines */
-        }
-
-        .read-more {
-            color: #2563eb;
-            cursor: pointer;
-            font-weight: 500;
-        }
-
-        .read-more:hover {
-            text-decoration: underline;
-        }
-
-        /* Add after the existing styles in the <style> section */
-        .grid-container {
-            transition: all 0.3s ease;
-        }
-
-        .card-expanded {
-            transform: scale(1.02);
-            z-index: 10;
-            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
-        }
-
-        .card-content {
-            transition: max-height 0.3s ease-in-out;
-        }
-
-        .view-toggle-button {
-            padding: 0.5rem;
-            border-radius: 0.375rem;
-            transition: background-color 0.2s;
-        }
-
-        .view-toggle-button:hover {
-            background-color: rgb(243 244 246);
-        }
-
-        .view-toggle-button.active {
-            background-color: rgb(229 231 235);
-        }
-
-        .keyboard-shortcut {
-            font-size: 0.75rem;
-            color: rgb(107 114 128);
-            padding: 0.125rem 0.375rem;
-            background-color: rgb(243 244 246);
-            border-radius: 0.25rem;
-            margin: 0 0.25rem;
-        }
-    </style>
 </head>
-
-<body class="min-h-screen bg-gray-50">
-    <!-- Search Header -->
+<body class="bg-gray-50">
     <div class="max-w-6xl mx-auto p-8">
+        <!-- Header -->
         <div class="mb-8 text-center">
-            <h1 class="text-4xl font-bold mb-4 text-gray-900">Font Search</h1>
-            <p class="text-gray-600 mb-6">
-                Search through our collection of fonts using natural language
-            </p>
+            <h1 id="font-search" class="text-4xl font-bold mb-4 text-gray-900">Font Search</h1>
+            <p>Search through our collection of fonts using natural language</p>
 
             <div class="flex gap-2 max-w-2xl mx-auto">
-                <input type="text" id="searchInput"
-                    placeholder="Try 'playful handwritten font' or 'professional serif'..."
-                    class="flex-1 px-4 py-2 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                <button id="searchButton"
-                    class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 flex items-center gap-2">
-                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                <div class="relative flex-1">
+                    <input type="text" id="searchInput" 
+                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                           placeholder="Search fonts...">
+                    <svg class="w-4 h-4 absolute right-3 top-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                     </svg>
-                    Search
-                </button>
+                </div>
             </div>
-            <!-- Add after the search input div -->
+
             <div class="text-center mt-2 text-sm text-gray-500">
-                Press <span class="keyboard-shortcut">Ctrl/⌘ + K</span> to search •
-                <span class="keyboard-shortcut">Ctrl/⌘ + /</span> to toggle view
+                Press <kbd class="keyboard-shortcut">Ctrl/⌘ + K</kbd> to search • 
+                <kbd class="keyboard-shortcut">Ctrl/⌘ + /</kbd> to toggle view
             </div>
         </div>
 
-        <!-- Card Size Selector -->
-        <div class="mb-6 flex justify-end">
-            <select id="cardSize"
-                class="px-3 py-1 rounded-lg border border-gray-300 bg-white focus:outline-none focus:ring-2">
-                <option value="compact">Compact</option>
-                <option value="normal" selected>Normal</option>
-                <option value="large">Large</option>
-            </select>
-        </div>
-
-        <!-- Add after the card size selector -->
+        <!-- View Controls -->
         <div class="mb-6 flex justify-between items-center">
-            <div class="flex items-center gap-2">
-                <button class="view-toggle-button active" data-view="grid" title="Grid view">
+            <div class="flex items-center gap-4">
+                <button id="gridViewBtn" class="p-2 rounded hover:bg-gray-100 text-gray-600 view-btn active" aria-label="Grid View">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <rect x="3" y="3" width="7" height="7"></rect>
-                        <rect x="14" y="3" width="7" height="7"></rect>
-                        <rect x="14" y="14" width="7" height="7"></rect>
-                        <rect x="3" y="14" width="7" height="7"></rect>
+                        <rect x="3" y="3" width="7" height="7" />
+                        <rect x="14" y="3" width="7" height="7" />
+                        <rect x="14" y="14" width="7" height="7" />
+                        <rect x="3" y="14" width="7" height="7" />
                     </svg>
                 </button>
-                <button class="view-toggle-button" data-view="list" title="List view">
+                <button id="listViewBtn" class="p-2 rounded hover:bg-gray-100 text-gray-600 view-btn" aria-label="List View">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <line x1="8" y1="6" x2="21" y2="6"></line>
                         <line x1="8" y1="12" x2="21" y2="12"></line>
@@ -159,9 +52,7 @@
                     </svg>
                 </button>
             </div>
-
-            <button id="sortButton"
-                class="flex items-center gap-1 px-3 py-1 text-sm text-gray-600 hover:bg-gray-100 rounded">
+            <button id="sortButton" class="flex items-center gap-2 text-sm text-gray-600">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M7 20V4m0 16l3-3m-3 3l-3-3m13-3V4m0 10l3-3m-3 3l-3-3" />
                 </svg>
@@ -169,13 +60,14 @@
             </button>
         </div>
 
-        <!-- States -->
+        <!-- Loading Indicator -->
         <div id="loadingIndicator" class="hidden">
             <div class="flex justify-center items-center py-12">
                 <div class="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
             </div>
         </div>
 
+        <!-- Error Alert -->
         <div id="errorAlert" class="hidden mb-6 bg-red-50 border border-red-200 text-red-800 rounded-lg p-4"></div>
 
         <!-- Results Grid -->
@@ -191,51 +83,37 @@
     <template id="fontCardTemplate">
         <div class="search-result bg-white rounded-lg shadow-sm overflow-hidden border border-gray-200">
             <div class="p-6">
-                <!-- Title -->
-                <h3 class="text-lg font-semibold text-gray-900 mb-2 truncate font-title"></h3>
-                <!-- Add this right after the title in the font card template -->
-                <button
-                    class="expand-collapse-btn p-1 text-gray-400 hover:text-gray-600 rounded-full hover:bg-gray-100">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M15 3h6v6M9 21H3v-6M21 3l-7 7M3 21l7-7" />
-                    </svg>
-                </button>
-                <!-- Preview -->
+                <div class="card-header">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-2 truncate font-title"></h3>
+                </div>
+                
                 <div class="font-preview bg-gray-50 -mx-6 px-6 py-4 border-y border-gray-100">
-                    <img class="w-full object-contain" src="" alt=""
-                        onerror="this.parentElement.innerHTML='<div class=\'h-20 flex items-center justify-center text-gray-400\'>Preview not available</div>'">
+                    <img class="w-full h-32 object-contain" alt="Font preview"
+                         onerror="this.parentElement.innerHTML='<div class=\'h-32 flex items-center justify-center text-gray-400 bg-gray-50 rounded\'>Preview not available</div>'">
                 </div>
 
-                <!-- Description -->
-                <div class="description-container mt-4">
-                    <div class="description-text text-sm text-gray-600 collapsed">
-                        <p class="description-content"></p>
-                    </div>
-                    <button class="read-more text-sm mt-1 hidden">...more</button>
+                                    <div class="description-container mt-4">
+                    <div class="description-text text-sm text-gray-600"></div>
+                    <button class="read-more">...more</button>
                 </div>
 
-                <!-- Metadata Sections -->
                 <div class="metadata-section space-y-4 mt-4">
-                    <!-- Technical Characteristics -->
                     <div class="tech-section">
                         <h4 class="text-xs font-semibold text-gray-500 mb-1">Technical Characteristics</h4>
                         <div class="badge-container characteristics-container flex flex-wrap gap-1"></div>
                     </div>
 
-                    <!-- Personality Traits -->
                     <div class="personality-section">
                         <h4 class="text-xs font-semibold text-gray-500 mb-1">Personality</h4>
                         <div class="badge-container traits-container flex flex-wrap gap-1"></div>
                     </div>
 
-                    <!-- Use Cases -->
                     <div class="context-section">
                         <h4 class="text-xs font-semibold text-gray-500 mb-1">Best For</h4>
                         <div class="badge-container contexts-container flex flex-wrap gap-1"></div>
                     </div>
                 </div>
 
-                <!-- Score -->
                 <div class="mt-4 text-right">
                     <span class="text-sm text-gray-500 font-score"></span>
                 </div>
@@ -243,231 +121,321 @@
         </div>
     </template>
 
-    <script>
-        const API_BASE_URL = 'http://localhost:5000';
+    <style>
+        .keyboard-shortcut {
+            padding: 0.25rem 0.5rem;
+            background-color: #f3f4f6;
+            border-radius: 0.25rem;
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            font-size: 0.75rem;
+            font-weight: 500;
+            border-radius: 9999px;
+        }
+        
+        /* Technical characteristics badges */
+        .characteristics-container .badge {
+            background-color: #e0f2fe;
+            color: #0369a1;
+        }
+        
+        /* Personality traits badges */
+        .traits-container .badge {
+            background-color: #fef3c7;
+            color: #92400e;
+        }
+        
+        /* Context badges */
+        .contexts-container .badge {
+            background-color: #ecfdf5;
+            color: #047857;
+        }
+        
+        .description-text {
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+        }
+        
+        .description-text.expanded {
+            -webkit-line-clamp: unset;
+        }
+        
+        .read-more {
+            display: none;
+            cursor: pointer;
+            color: #2563eb;
+            font-size: 0.875rem;
+        }
+        
+        .read-more:hover {
+            color: #1d4ed8;
+        }
+        
+        .read-more.visible {
+            display: inline-block;
+        }
 
-        document.addEventListener('DOMContentLoaded', function () {
+        .view-btn.active {
+            color: #2563eb;
+            background-color: #eff6ff;
+        }
+
+        /* List view specific styles */
+        .list-view {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .list-view .search-result {
+            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+            overflow: hidden;
+            background: white;
+            padding: 1.5rem;
+        }
+
+        .list-view .search-result > div {
+            padding: 0;
+        }
+
+        .list-view .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .list-view .font-title {
+            margin: 0;
+            flex: 1;
+            min-width: 0;
+        }
+
+        .list-view .font-score {
+            white-space: nowrap;
+        }
+
+        .list-view .font-preview {
+            margin: 0;
+            background: white;
+            text-align: center;
+            margin-bottom: 1rem;
+        }
+
+        .list-view .font-preview img {
+            width: 100%;
+            height: 160px;
+            object-fit: contain;
+        }
+
+        .list-view .description-container {
+            margin-bottom: 1rem;
+        }
+
+        .list-view .metadata-section {
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .list-view .tech-section,
+        .list-view .personality-section,
+        .list-view .context-section {
+            margin: 0;
+        }
+
+        .list-view .badge {
+            margin: 0.125rem;
+        }
+
+        .description-text.collapsed {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+    </style>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
             const searchInput = document.getElementById('searchInput');
-            const searchButton = document.getElementById('searchButton');
+            const resultsGrid = document.getElementById('resultsGrid');
             const loadingIndicator = document.getElementById('loadingIndicator');
             const errorAlert = document.getElementById('errorAlert');
-            const resultsGrid = document.getElementById('resultsGrid');
             const noResults = document.getElementById('noResults');
-            const template = document.getElementById('fontCardTemplate');
-            const cardSizeSelect = document.getElementById('cardSize');
+            const gridViewBtn = document.getElementById('gridViewBtn');
+            const listViewBtn = document.getElementById('listViewBtn');
+            
+            let currentView = 'grid';
+            let debounceTimer;
 
-            function setupDescriptionToggle(container) {
-                const descText = container.querySelector('.description-text');
-                const content = container.querySelector('.description-content');
-                const readMoreBtn = container.querySelector('.read-more');
-
-                if (!content.textContent.trim()) {
-                    container.remove();
-                    return;
-                }
-
-                // Check if content needs truncation
-                const isOverflowing = content.scrollHeight > 72; // Approximate height of 3 lines
-                if (isOverflowing) {
-                    readMoreBtn.classList.remove('hidden');
-                    readMoreBtn.addEventListener('click', () => {
-                        descText.classList.toggle('collapsed');
-                        readMoreBtn.textContent = descText.classList.contains('collapsed') ? '...more' : 'less';
-                    });
-                }
+            // View Toggle Functions
+            function setGridView() {
+                currentView = 'grid';
+                resultsGrid.classList.remove('list-view');
+                resultsGrid.classList.add('grid', 'grid-cols-1', 'md:grid-cols-2', 'lg:grid-cols-3', 'gap-6');
+                gridViewBtn.classList.add('active');
+                listViewBtn.classList.remove('active');
             }
 
-            // Card size handling
-            const updateGridLayout = () => {
-                const size = cardSizeSelect.value;
-                resultsGrid.className = 'grid gap-6 ';
-
-                switch (size) {
-                    case 'compact':
-                        resultsGrid.classList.add('grid-cols-1', 'md:grid-cols-3', 'lg:grid-cols-4');
-                        document.querySelectorAll('.font-preview').forEach(preview => {
-                            preview.style.height = '100px';
-                        });
-                        break;
-                    case 'normal':
-                        resultsGrid.classList.add('grid-cols-1', 'md:grid-cols-2', 'lg:grid-cols-3');
-                        document.querySelectorAll('.font-preview').forEach(preview => {
-                            preview.style.height = '150px';
-                        });
-                        break;
-                    case 'large':
-                        resultsGrid.classList.add('grid-cols-1', 'md:grid-cols-2');
-                        document.querySelectorAll('.font-preview').forEach(preview => {
-                            preview.style.height = '200px';
-                        });
-                        break;
-                }
-            };
-
-            cardSizeSelect.addEventListener('change', updateGridLayout);
-
-            function createBadge(text, variant) {
-                if (!text) return null;
-
-                const badge = document.createElement('span');
-                let classes = 'inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ';
-
-                switch (variant) {
-                    case 'technical':
-                        classes += 'bg-gray-100 text-gray-800';
-                        break;
-                    case 'personality':
-                        classes += 'bg-blue-100 text-blue-800';
-                        break;
-                    case 'context':
-                        classes += 'bg-green-100 text-green-800';
-                        break;
-                    default:
-                        classes += 'bg-gray-100 text-gray-800';
-                }
-
-                badge.className = classes;
-                badge.textContent = text;
-                return badge;
+            function setListView() {
+                currentView = 'list';
+                resultsGrid.classList.add('list-view');
+                resultsGrid.classList.remove('grid', 'grid-cols-1', 'md:grid-cols-2', 'lg:grid-cols-3', 'gap-6');
+                listViewBtn.classList.add('active');
+                gridViewBtn.classList.remove('active');
             }
 
-            function displayResults(results) {
-                resultsGrid.innerHTML = '';
-                noResults.classList.add('hidden');
+            // Event Listeners
+            gridViewBtn.addEventListener('click', setGridView);
+            listViewBtn.addEventListener('click', setListView);
 
-                if (!results?.length) {
-                    noResults.classList.remove('hidden');
-                    return;
-                }
-
-                results.forEach(font => {
-                    const card = template.content.cloneNode(true);
-
-                    // Set title
-                    const title = font.filename.replace(/\.[^/.]+$/, '').replace(/_/g, ' ');
-                    card.querySelector('.font-title').textContent = title;
-
-                    // Set description if exists
-                    const descContent = card.querySelector('.description-content');
-                    if (font.description) {
-                        descContent.textContent = font.description;
-                    }
-
-                    // Set image
-                    const img = card.querySelector('img');
-                    if (font.image) {
-                        img.src = `${API_BASE_URL}${font.image}`;
-                        img.alt = title;
-                    }
-
-                    // Add metadata
-                    const metadataSection = card.querySelector('.metadata-section');
-                    let hasMetadata = false;
-
-                    // Technical Characteristics
-                    const techSection = card.querySelector('.tech-section');
-                    if (font.technical_characteristics?.length) {
-                        const container = techSection.querySelector('.characteristics-container');
-                        font.technical_characteristics.forEach(char => {
-                            const badge = createBadge(char, 'technical');
-                            if (badge) container.appendChild(badge);
-                        });
-                        hasMetadata = true;
-                    } else {
-                        techSection.remove();
-                    }
-
-                    // Personality Traits
-                    const personalitySection = card.querySelector('.personality-section');
-                    if (font.personality_traits?.length) {
-                        const container = personalitySection.querySelector('.traits-container');
-                        font.personality_traits.forEach(trait => {
-                            const badge = createBadge(trait, 'personality');
-                            if (badge) container.appendChild(badge);
-                        });
-                        hasMetadata = true;
-                    } else {
-                        personalitySection.remove();
-                    }
-
-                    // Use Cases
-                    const contextSection = card.querySelector('.context-section');
-                    if (font.practical_contexts?.length) {
-                        const container = contextSection.querySelector('.contexts-container');
-                        font.practical_contexts.forEach(context => {
-                            const badge = createBadge(context, 'context');
-                            if (badge) container.appendChild(badge);
-                        });
-                        hasMetadata = true;
-                    } else {
-                        contextSection.remove();
-                    }
-
-                    if (!hasMetadata) {
-                        metadataSection.remove();
-                    }
-
-                    // Set score
-                    card.querySelector('.font-score').textContent =
-                        `Score: ${(font.score * 100).toFixed(1)}%`;
-
-                    // Add card to grid
-                    const cardElement = document.createElement('div');
-                    cardElement.appendChild(card);
-                    resultsGrid.appendChild(cardElement);
-
-                    // Setup description toggle after card is added to DOM
-                    setupDescriptionToggle(cardElement.querySelector('.description-container'));
-                });
-
-                updateGridLayout();
-            }
-
-            async function performSearch() {
-                const query = searchInput.value.trim();
-                if (!query) return;
-
+            // Search Function
+            async function searchFonts(query) {
                 loadingIndicator.classList.remove('hidden');
                 errorAlert.classList.add('hidden');
-                searchButton.disabled = true;
+                noResults.classList.add('hidden');
 
                 try {
-                    const response = await fetch(`${API_BASE_URL}/api/search`, {
+                    const response = await fetch('http://localhost:5000/api/search', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
                         },
-                        body: JSON.stringify({ query })
+                        body: JSON.stringify({ query }),
                     });
 
                     if (!response.ok) {
-                        throw new Error('Search failed');
+                        throw new Error('Search request failed');
                     }
 
                     const results = await response.json();
                     displayResults(results);
+
                 } catch (error) {
-                    errorAlert.textContent = 'Failed to fetch results. Please try again.';
+                    console.error('Search error:', error);
+                    errorAlert.textContent = 'An error occurred while searching. Please try again.';
                     errorAlert.classList.remove('hidden');
-                    resultsGrid.innerHTML = '';
                 } finally {
                     loadingIndicator.classList.add('hidden');
-                    searchButton.disabled = false;
                 }
             }
 
-            // Event listeners
-            searchButton.addEventListener('click', performSearch);
-            searchInput.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') {
-                    performSearch();
+            // Display Results Function
+            function displayResults(results) {
+                resultsGrid.innerHTML = '';
+
+                if (results.length === 0) {
+                    noResults.classList.remove('hidden');
+                    return;
+                }
+
+                const template = document.getElementById('fontCardTemplate');
+
+                results.forEach(font => {
+                    const card = template.content.cloneNode(true);
+                    const result = card.querySelector('.search-result');
+
+                    // Set font name
+                    result.querySelector('h3').textContent = font.filename.replace('.png', '');
+                    
+                    // Set preview image
+                    const img = result.querySelector('img');
+                    if (font.image) {
+                        img.src = `http://localhost:5000${font.image}`;
+                        img.alt = font.filename;
+                    }
+
+                    // Set description and handle expand/collapse
+                    const descriptionText = result.querySelector('.description-text');
+                    const readMoreBtn = result.querySelector('.read-more');
+                    descriptionText.textContent = font.description;
+                    
+                    // Check if description needs expand/collapse
+                    setTimeout(() => {
+                        if (descriptionText.scrollHeight > descriptionText.clientHeight) {
+                            readMoreBtn.classList.add('visible');
+                            
+                            readMoreBtn.addEventListener('click', () => {
+                                if (descriptionText.classList.contains('expanded')) {
+                                    descriptionText.classList.remove('expanded');
+                                    readMoreBtn.textContent = '...more';
+                                } else {
+                                    descriptionText.classList.add('expanded');
+                                    readMoreBtn.textContent = 'less';
+                                }
+                            });
+                        }
+                    }, 0);
+
+                    // Add badges
+                    addBadges(result.querySelector('.characteristics-container'), font.technical_characteristics);
+                    addBadges(result.querySelector('.traits-container'), font.personality_traits);
+                    addBadges(result.querySelector('.contexts-container'), font.practical_contexts);
+
+                    // Set score
+                    result.querySelector('.font-score').textContent = `Score: ${(font.score * 100).toFixed(1)}%`;
+
+                    resultsGrid.appendChild(card);
+                });
+
+                // Apply current view layout
+                if (currentView === 'list') {
+                    setListView();
+                }
+            }
+
+            // Helper function to add badges
+            function addBadges(container, items) {
+                if (!items) return;
+                items.forEach(item => {
+                    const badge = document.createElement('span');
+                    badge.className = 'badge';
+                    badge.textContent = item;
+                    container.appendChild(badge);
+                });
+            }
+
+            // Search Input Handler
+            searchInput.addEventListener('input', (e) => {
+                clearTimeout(debounceTimer);
+                debounceTimer = setTimeout(() => {
+                    const query = e.target.value.trim();
+                    if (query) {
+                        searchFonts(query);
+                    }
+                }, 300);
+            });
+
+            // Keyboard Shortcuts
+            document.addEventListener('keydown', (e) => {
+                // Ctrl/Cmd + K for search focus
+                if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+                    e.preventDefault();
+                    searchInput.focus();
+                }
+                // Ctrl/Cmd + / for view toggle
+                if ((e.ctrlKey || e.metaKey) && e.key === '/') {
+                    e.preventDefault();
+                    if (currentView === 'grid') {
+                        setListView();
+                    } else {
+                        setGridView();
+                    }
                 }
             });
 
-            // Initialize grid layout
-            updateGridLayout();
+            // Initialize with grid view
+            setGridView();
         });
     </script>
 </body>
-
 </html>
