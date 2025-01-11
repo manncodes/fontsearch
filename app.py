@@ -5,15 +5,19 @@ from vector_font_search import VectorFontSearch
 import os
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, resources={r"/api/*": {"origins": "*"}})
 
 # Configuration
-IMAGES_DIR = "rendered_fonts"  # Directory containing font images
+IMAGES_DIR = "serving_images"  # Directory containing font images
 SAVE_DIR = "serving_index"
 
 # Load the saved search engine
 search_engine = VectorFontSearch.load(save_dir=SAVE_DIR, images_dir=IMAGES_DIR)
 
+
+@app.route('/')
+def serve_index():
+    return send_from_directory('static', 'index.html')
 
 @app.route('/api/search', methods=['POST'])
 def search():
@@ -58,4 +62,5 @@ def status():
 
 
 if __name__ == '__main__':
-    app.run(debug=True, port=5000)
+    # app.run(host='0.0.0.0', port=8080, debug=True)
+    app.run(host='0.0.0.0', port=8080)

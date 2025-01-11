@@ -1,31 +1,74 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Font Search</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/darkmode-js@1.5.7/lib/darkmode-js.min.js"></script>
+    <script>
+        const options = {
+            // bottom: '64px', // default: '32px'
+            // right: 'unset', // default: '32px'
+            // left: '32px', // default: 'unset'
+            time: '0.5s', // default: '0.3s'
+            mixColor: '#fff', // default: '#fff'
+            backgroundColor: '#fff',  // default: '#fff'
+            buttonColorDark: '#100f2c',  // default: '#100f2c'
+            buttonColorLight: '#fff', // default: '#fff'
+            saveInCookies: false, // default: true,
+            label: '🌓', // default: ''
+            autoMatchOsTheme: true // default: true
+        }
+        function addDarkmodeWidget() {
+            const darkmode = new Darkmode(options);
+            darkmode.showWidget();
+        }
+        window.addEventListener('load', addDarkmodeWidget);
+    </script>
 </head>
+
 <body class="bg-gray-50">
     <div class="max-w-6xl mx-auto p-8">
         <!-- Header -->
         <div class="mb-8 text-center">
+
+            <!-- Dark Mode Toggle Button -->
+            <!-- <div class="absolute right-0 top-0">
+                <button id="theme-toggle" type="button" class="text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-2.5">
+                    <svg id="theme-toggle-dark-icon" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"></path></svg>
+                    <svg id="theme-toggle-light-icon" class="hidden w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z" fill-rule="evenodd" clip-rule="evenodd"></path></svg>
+                </button>
+            </div> -->
+
             <h1 id="font-search" class="text-4xl font-bold mb-4 text-gray-900">Font Search</h1>
-            <p>Search through our collection of fonts using natural language</p>
+            <div class="flex items-center justify-center gap-2 mb-4 text-gray-600 dark:text-gray-400">
+                <span>by</span>
+                <a href="https://github.com/manncodes" target="_blank" class="inline-flex items-center gap-1 text-blue-600 dark:text-blue-400 hover:underline">
+                    Mann Patel
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                    </svg>
+                </a>
+            </div>
+            <p>Search through our collection of fonts using <i>natural language</i>!</p>
 
             <div class="flex gap-2 max-w-2xl mx-auto">
                 <div class="relative flex-1">
-                    <input type="text" id="searchInput" 
-                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                           placeholder="Search fonts...">
-                    <svg class="w-4 h-4 absolute right-3 top-3 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                    <input type="text" id="searchInput"
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                        placeholder="Search fonts...">
+                    <svg class="w-4 h-4 absolute right-3 top-3 text-gray-400" fill="none" stroke="currentColor"
+                        viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                     </svg>
                 </div>
             </div>
 
             <div class="text-center mt-2 text-sm text-gray-500">
-                Press <kbd class="keyboard-shortcut">Ctrl/⌘ + K</kbd> to search • 
+                Press <kbd class="keyboard-shortcut">Ctrl/⌘ + K</kbd> to search •
                 <kbd class="keyboard-shortcut">Ctrl/⌘ + /</kbd> to toggle view
             </div>
         </div>
@@ -33,7 +76,8 @@
         <!-- View Controls -->
         <div class="mb-6 flex justify-between items-center">
             <div class="flex items-center gap-4">
-                <button id="gridViewBtn" class="p-2 rounded hover:bg-gray-100 text-gray-600 view-btn active" aria-label="Grid View">
+                <button id="gridViewBtn" class="p-2 rounded hover:bg-gray-100 text-gray-600 view-btn active"
+                    aria-label="Grid View">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <rect x="3" y="3" width="7" height="7" />
                         <rect x="14" y="3" width="7" height="7" />
@@ -41,7 +85,8 @@
                         <rect x="3" y="14" width="7" height="7" />
                     </svg>
                 </button>
-                <button id="listViewBtn" class="p-2 rounded hover:bg-gray-100 text-gray-600 view-btn" aria-label="List View">
+                <button id="listViewBtn" class="p-2 rounded hover:bg-gray-100 text-gray-600 view-btn"
+                    aria-label="List View">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <line x1="8" y1="6" x2="21" y2="6"></line>
                         <line x1="8" y1="12" x2="21" y2="12"></line>
@@ -86,13 +131,13 @@
                 <div class="card-header">
                     <h3 class="text-lg font-semibold text-gray-900 mb-2 truncate font-title"></h3>
                 </div>
-                
+
                 <div class="font-preview bg-gray-50 -mx-6 px-6 py-4 border-y border-gray-100">
-                    <img class="w-full h-32 object-contain" alt="Font preview"
-                         onerror="this.parentElement.innerHTML='<div class=\'h-32 flex items-center justify-center text-gray-400 bg-gray-50 rounded\'>Preview not available</div>'">
+                    <img class="w-full h-32 object-contain" alt="Font preview" // Update your image error handler
+                        onerror="this.parentElement.innerHTML='<div class=\'h-48 flex items-center justify-center text-gray-400 bg-white rounded border border-gray-200\'><div class=\'text-center\'><svg class=\'w-12 h-12 mx-auto mb-2 text-gray-300\' fill=\'none\' stroke=\'currentColor\' viewBox=\'0 0 24 24\'><path stroke-linecap=\'round\' stroke-linejoin=\'round\' stroke-width=\'2\' d=\'M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z\'></path></svg><p>Preview not available</p></div></div>'">
                 </div>
 
-                                    <div class="description-container mt-4">
+                <div class="description-container mt-4">
                     <div class="description-text text-sm text-gray-600"></div>
                     <button class="read-more">...more</button>
                 </div>
@@ -127,7 +172,7 @@
             background-color: #f3f4f6;
             border-radius: 0.25rem;
         }
-        
+
         .badge {
             display: inline-block;
             padding: 0.25rem 0.75rem;
@@ -135,47 +180,47 @@
             font-weight: 500;
             border-radius: 9999px;
         }
-        
+
         /* Technical characteristics badges */
         .characteristics-container .badge {
             background-color: #e0f2fe;
             color: #0369a1;
         }
-        
+
         /* Personality traits badges */
         .traits-container .badge {
             background-color: #fef3c7;
             color: #92400e;
         }
-        
+
         /* Context badges */
         .contexts-container .badge {
             background-color: #ecfdf5;
             color: #047857;
         }
-        
+
         .description-text {
             overflow: hidden;
             display: -webkit-box;
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
         }
-        
+
         .description-text.expanded {
             -webkit-line-clamp: unset;
         }
-        
+
         .read-more {
             display: none;
             cursor: pointer;
             color: #2563eb;
             font-size: 0.875rem;
         }
-        
+
         .read-more:hover {
             color: #1d4ed8;
         }
-        
+
         .read-more.visible {
             display: inline-block;
         }
@@ -200,7 +245,7 @@
             padding: 1.5rem;
         }
 
-        .list-view .search-result > div {
+        .list-view .search-result>div {
             padding: 0;
         }
 
@@ -262,10 +307,59 @@
             -webkit-box-orient: vertical;
             overflow: hidden;
         }
+
+        .font-preview {
+            background: white !important;
+            /* Change from gray-50 */
+            border: 1px solid #eee;
+            padding: 0.1rem !important;
+            margin: 1rem -1.5rem;
+            min-height: 200px;
+            /* Ensure consistent height */
+        }
+
+        .font-preview img {
+            width: 150%;
+            height: auto;
+            min-height: 160px;
+            object-fit: contain;
+            filter: contrast(1.2);
+            /* Improve visibility */
+        }
+
+        .search-result {
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .search-result:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Increase spacing */
+        .card-header {
+            margin-bottom: 1.5rem;
+        }
+
+        .image-loading {
+            background: linear-gradient(90deg, #f0f0f0 25%, #f8f8f8 50%, #f0f0f0 75%);
+            background-size: 200% 100%;
+            animation: loading 1.5s infinite;
+        }
+
+        @keyframes loading {
+            0% {
+                background-position: 200% 0;
+            }
+
+            100% {
+                background-position: -200% 0;
+            }
+        }
     </style>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             const searchInput = document.getElementById('searchInput');
             const resultsGrid = document.getElementById('resultsGrid');
             const loadingIndicator = document.getElementById('loadingIndicator');
@@ -273,7 +367,7 @@
             const noResults = document.getElementById('noResults');
             const gridViewBtn = document.getElementById('gridViewBtn');
             const listViewBtn = document.getElementById('listViewBtn');
-            
+
             let currentView = 'grid';
             let debounceTimer;
 
@@ -305,7 +399,7 @@
                 noResults.classList.add('hidden');
 
                 try {
-                    const response = await fetch('http://localhost:5000/api/search', {
+                    const response = await fetch('/api/search', {
                         method: 'POST',
                         headers: {
                             'Content-Type': 'application/json',
@@ -346,11 +440,11 @@
 
                     // Set font name
                     result.querySelector('h3').textContent = font.filename.replace('.png', '');
-                    
+
                     // Set preview image
                     const img = result.querySelector('img');
                     if (font.image) {
-                        img.src = `http://localhost:5000${font.image}`;
+                        img.src = font.image;
                         img.alt = font.filename;
                     }
 
@@ -358,12 +452,12 @@
                     const descriptionText = result.querySelector('.description-text');
                     const readMoreBtn = result.querySelector('.read-more');
                     descriptionText.textContent = font.description;
-                    
+
                     // Check if description needs expand/collapse
                     setTimeout(() => {
                         if (descriptionText.scrollHeight > descriptionText.clientHeight) {
                             readMoreBtn.classList.add('visible');
-                            
+
                             readMoreBtn.addEventListener('click', () => {
                                 if (descriptionText.classList.contains('expanded')) {
                                     descriptionText.classList.remove('expanded');
@@ -438,4 +532,5 @@
         });
     </script>
 </body>
+
 </html>
