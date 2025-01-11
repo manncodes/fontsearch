@@ -1,6 +1,10 @@
-numpy
-faiss-cpu
-sentence-transformers
-flask
-flask-cors
-pathlib
+numpy>=1.24.0
+faiss-cpu>=1.7.4
+--extra-index-url https://download.pytorch.org/whl/cpu
+torch>=2.1.0+cpu
+torchvision>=0.16.0+cpu
+sentence-transformers>=2.2.2
+flask>=2.3.0
+flask-cors>=4.0.0
+pathlib>=1.0.1
+tf-keras  # Adding this to fix the Keras compatibility issue
