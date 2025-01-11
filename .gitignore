@@ -6,6 +6,7 @@ prev_index/
 
 # dont push the assests folder to github
 rendered_fonts/**
+serving_images/**
 
 # also the fetched fonts descriptions
 # font_descriptions/**
