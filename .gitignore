@@ -8,4 +8,4 @@ prev_index/
 rendered_fonts/**
 
 # also the fetched fonts descriptions
-font_descriptions/**
+# font_descriptions/**
