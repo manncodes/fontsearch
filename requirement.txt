@@ -1,0 +1,6 @@
+numpy
+faiss-cpu
+sentence-transformers
+flask
+flask-cors
+pathlib
